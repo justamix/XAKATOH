@@ -38,5 +38,15 @@ services:
     env_file: .env
     restart: always
 
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=YES
+
 volumes:
   pgdbdata: null
