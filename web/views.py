@@ -12,6 +12,8 @@ import uuid
 from django.conf import settings
 import redis
 
+error_dict = {'is_error':False}
+
 logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
 
@@ -63,10 +65,11 @@ def api_info_user(request, pk):
 
 
 def login_user(request):
-    return render(request, 'login.html')
+    global error_dict
+    return render(request, 'login.html', error_dict)
 
 def check_login_user(request):
-    error_dict = {'is_error':False}
+    global error_dict
     try:
         if request.COOKIES("session_id") is not None:
             error_dict['is_error'] = True
@@ -90,4 +93,11 @@ def check_login_user(request):
             return redirect("/user/login")
         
 def home(request):
-    return HttpResponse("Hello world")
+    global error_dict
+    error_dict['is_error'] = False
+
+    name_org = request.GET.get('name_org')
+    orgs = event.objects.filter(name__icontains=name_org)
+    
+
+    return render(request, 'home.html')

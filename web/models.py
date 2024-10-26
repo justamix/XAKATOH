@@ -62,6 +62,8 @@ class Category(models.Model):
         db_table = 'category'
 
 class event(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(default="Descr")
     date = models.DateTimeField()
     playground = models.CharField(max_length=100)
     latitude = models.FloatField(default=0)
