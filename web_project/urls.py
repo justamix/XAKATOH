@@ -20,5 +20,8 @@ from web import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.Home)
+    path('', views.Home),
+    path('1/', views.Home1),
+    path('2/', views.Home2),
+    path('3/', views.Home3)
 ]
