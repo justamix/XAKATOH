@@ -18,7 +18,7 @@ class event(models.Model):
     is_open = models.BooleanField(default=True)
     duration_in_minutes = models.IntegerField(default=60)
     capacity = models.IntegerField()
-    category = models.ForeignKey()
+    category = models.ForeignKey('category', models.DO_NOTHING)
 
     class Meta:
         managed = True 
@@ -26,5 +26,12 @@ class event(models.Model):
 
 
 class EventUser(models.Model):
-    event = 
+    event = models.ForeignKey('event', models.DO_NOTHING)
+    user = models.ForeignKey('user', models.DO_NOTHING)
+    class Meta:
+        managed = True
+        db_table = 'event_user'
+        constraints = [
+            models.UniqueConstraint(fields=['event', 'user'], name='unique_event_user')
+        ]
 
