@@ -6,7 +6,7 @@ class Category(models.Model):
     name = models.CharField()
 
     class Meta:
-        managed =True
+        managed =False
         db_table = 'category'
 
 class event(models.Model):
@@ -21,7 +21,7 @@ class event(models.Model):
     category = models.ForeignKey('category', models.DO_NOTHING)
 
     class Meta:
-        managed = True 
+        managed = False 
         db_table = 'event'
 
 
@@ -29,7 +29,7 @@ class EventUser(models.Model):
     event = models.ForeignKey('event', models.DO_NOTHING)
     user = models.ForeignKey('user', models.DO_NOTHING)
     class Meta:
-        managed = True
+        managed = False
         db_table = 'event_user'
         constraints = [
             models.UniqueConstraint(fields=['event', 'user'], name='unique_event_user')
