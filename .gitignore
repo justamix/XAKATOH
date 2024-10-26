@@ -1,3 +1,5 @@
+myenv/
 venv/
 db.sqlite3
 __pycache__/
+minio_storage/
