@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-scq1(nnx0vxl8oh#u&canld3ejsb%t2w6gm^qahqi)037)*_$t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'web'
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'web_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "/Users/Fedor/Desktop/HACATON/web/templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
