@@ -54,9 +54,8 @@ class event(models.Model):
 
 class EventUser(models.Model):
     event = models.ForeignKey('event', models.DO_NOTHING)
-    user = models.ForeignKey('user', models.DO_NOTHING)
+    user = models.ForeignKey('CustomUser', models.DO_NOTHING)
     class Meta:
         managed = False
         db_table = 'event_user'
-        unique_together = (('id_order_mm', 'id_spare_mm'),)
-
+        unique_together = (('event', 'user'),)
