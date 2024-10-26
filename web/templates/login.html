@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Вход
+{% endblock %}
+
+{% block control %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}"/>
+
+<div class="registration-container">
+    <div class="registration-card">
+        <h2>Вход</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="login">Почта</label>
+                <input type="login" id="login" name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="pass">Пароль</label>
+                <input type="pass" id="pass" name="pass" required>
+            </div>
+            <button type="submit" class="register-button">Войти</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

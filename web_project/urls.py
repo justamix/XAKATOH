@@ -20,5 +20,13 @@ from web import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.Home)
+
+    path('user/register/', views.register_user, name='user-reg'), #POST создание нового пользователя
+    path('user/login/', views.login_user, name='user-login'), #POST залогиниться
+    # path('user/<int:pk>/', views.info_user, name='user-private'), #PUT личный кабинет
+    # path('user/<int:pk>/create_org/', views.create_user, name='user-whoami'),
+
+    #path('home/', views.home, name='user-whoami'),
+    # path('home/<int:pk>/info/', views.info_org_home, name='user-whoami'),
+
 ]
