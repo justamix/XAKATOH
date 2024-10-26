@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from rest_framework.decorators import api_view, permission_classes
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
 
 @api_view(["POST"])
-def register_user(request):
+def api_register_user(request):
     logger.error(request.user)
 
     try:
@@ -34,7 +34,7 @@ def register_user(request):
 
 
 @api_view(["POST"])
-def login_user(request):
+def api_login_user(request):
     try:
         if request.COOKIES["session_id"] is not None:
             return Response({'status': 'Уже в системе'}, status=status.HTTP_403_FORBIDDEN)
@@ -54,3 +54,40 @@ def login_user(request):
             return response
         else:
             return HttpResponse("{'status': 'error', 'error': 'login failed'}")
+
+@api_view(["GET"])
+def api_info_user(request, pk):
+    user = CustomUser.objects.filter(pk=pk)
+    serializer = UserRegSerializer(user)
+    return Response(serializer.data)
+
+
+def login_user(request):
+    return render(request, 'login.html')
+
+def check_login_user(request):
+    error_dict = {'is_error':False}
+    try:
+        if request.COOKIES("session_id") is not None:
+            error_dict['is_error'] = True
+            return redirect("user", "login")
+    except:
+        username = str(request.POST.get("login")) 
+        password = request.POST.get("pass")
+        logger.error(f'{username} -> {password}')
+        user = authenticate(request, username=username, password=password)
+        logger.error(user) 
+        if user is not None:
+            random_key = str(uuid.uuid4()) 
+            session_storage.set(random_key, username)
+
+            response = redirect("/home")
+            response.set_cookie("session_id", random_key)
+
+            return response
+        else:
+            error_dict['is_error'] = True
+            return redirect("/user/login")
+        
+def home(request):
+    return HttpResponse("Hello world")
