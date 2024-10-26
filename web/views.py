@@ -96,8 +96,8 @@ def home(request):
     global error_dict
     error_dict['is_error'] = False
 
-    name_org = request.GET.get('name_org')
-    orgs = event.objects.filter(name__icontains=name_org)
-    
+    # name_org = request.GET.get('name_org')
+    # orgs = event.objects.filter(name__icontains=name_org)
+
 
     return render(request, 'home.html')
