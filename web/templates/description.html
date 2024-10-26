@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+ИНФОРМАЦИЯ
+{% endblock %}
+
+
+{% block card %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/description.css' %}">
+<div class="space" >
+    <div class="info">
+        <img src="static/photo/img1.jpg" class="image-inf">
+        <a>
+            <p class="name">Название</p>
+            <p class="remaining-seats">Категория</p>
+            <p class="remaining-seats">Адрес</p>
+            <p class="description">«Технологии будущего» — Присоединяйтесь к событию, где эксперты расскажут о новейших инновациях и трендах в области IT и технологий. Это уникальная возможность узнать, что нас ждет в будущем и как адаптироваться к изменениям!
+
+                «Фестиваль творчества» — Наслаждайтесь искусством и креативностью на фестивале, где вас ждут выставки, мастер-классы и выступления талантливых художников и музыкантов. Откройте для себя новые грани искусства!</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
