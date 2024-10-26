@@ -7,7 +7,7 @@ class CustomUser(models.Model):
     email = models.EmailField(("email адрес"), unique=True)
     password = models.CharField(max_length=50, verbose_name="Пароль")    
     is_superuser = models.BooleanField(default=False, verbose_name="Является ли пользователь админом?")
-
+    sex = models.CharField(max_length=10, verbose_name="Пол")
     board_games = models.FloatField(default=0, verbose_name="Отношение к настольным играм")
     arts = models.FloatField(default=0, verbose_name="Отношение к исскуству")
     sport = models.FloatField(default=0, verbose_name="Отношение к спорту")
@@ -30,7 +30,7 @@ class CustomUser(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=100)
 
     class Meta:
         managed =False
@@ -39,8 +39,8 @@ class Category(models.Model):
 class event(models.Model):
     date = models.DateTimeField()
     playground = models.CharField(max_length=100)
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
     address = models.CharField(max_length=100)
     is_open = models.BooleanField(default=True)
     duration_in_minutes = models.IntegerField(default=60)
@@ -58,7 +58,5 @@ class EventUser(models.Model):
     class Meta:
         managed = False
         db_table = 'event_user'
-        constraints = [
-            models.UniqueConstraint(fields=['event', 'user'], name='unique_event_user')
-        ]
+        unique_together = (('id_order_mm', 'id_spare_mm'),)
 
