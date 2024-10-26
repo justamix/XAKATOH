@@ -6,7 +6,7 @@
 
 
 .registration-card {
-    background-color: #3f8dff;
+    background-color: #A67500;
     border-radius: 10px;
     padding: 20px;
     width: 300px;
@@ -15,7 +15,7 @@
 }
 
 .registration-card h2 {
-    color: #ff6e59;
+    color: #FFC740;
     text-align: center;
 }
 
@@ -32,7 +32,7 @@
     width: 100%;
     padding: 8px;
     border: none;
-    border-bottom: 1px solid #ff6e59;
+    border-bottom: 1px solid #FFC740;
     background: none;
     color: white;
     outline: none;
@@ -41,7 +41,7 @@
 .register-button {
     width: 100%;
     padding: 10px;
-    background-color: #ff6e59;
+    background-color: #FFC740;
     border: none;
     color: white;
     font-size: 1em;
@@ -50,5 +50,5 @@
 }
 
 .register-button:hover {
-    background-color: #ff8367;
+    background-color: #FFB400;
 }
