@@ -15,7 +15,9 @@ import numpy as np
 # from utils import cosine_distance
 from .utils import cosine_distance, filter_str, CAT_INDEX, MAX_DURATION, MAX_CAPACITY, MAX_AGE, SEX_INDEX
 
-error_dict = {'is_error': False}
+
+error_login = {'is_error':False}
+error_register = {'is_error':False}
 
 logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
@@ -71,15 +73,20 @@ def api_info_user(request, pk):
 
 
 def login_user(request):
-    global error_dict
-    return render(request, 'login.html', error_dict)
+    global error_login
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
+    except:
+        return render(request, 'login.html', error_login)
 
 def check_login_user(request):
-    global error_dict
+    global error_login
     try:
-        if request.COOKIES("session_id") is not None:
-            error_dict['is_error'] = True
-            return redirect("user", "login")
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
     except:
         username = str(request.POST.get("login")) 
         password = request.POST.get("pass")
@@ -95,12 +102,61 @@ def check_login_user(request):
 
             return response
         else:
-            error_dict['is_error'] = True
+            error_login['is_error'] = True
             return redirect("/user/login")
         
+
+def register_user(request, is_error=False):
+    global error_register
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
+    except:
+        return render(request, 'reg.html', error_register)
+
+def check_register_user(request):
+    global error_register
+
+    username = request.POST.get('username')
+    email = request.POST.get('email')
+    sex = request.POST.get('gender')
+    age = int(request.POST.get('age'))
+    password = request.POST.get('password')
+
+    logger.error(f"{username}, {email}, {sex}, {age}, {password}")
+
+    try:
+        new_user = CustomUser.objects.create_user(
+            username = username,
+            email = email,
+            sex = sex,
+            age = age,
+            password = password
+        )
+
+        return redirect('/user/login')
+
+    except:
+        error_register['is_error'] = True
+        return redirect('/user/register')
+
+        
 def home(request):
-    global error_dict
-    error_dict['is_error'] = False
+    global error_login
+    error_login['is_error'] = False
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+    except:
+        return redirect('/user/login')
+
+    logger.error(username)
+    user = CustomUser.objects.filter(username=username).first()
+    my_data = {
+        'username': username,
+        'pk':user.pk,
+    }
     name_org = request.GET.get('search_event')
     user_id = 1
     if name_org is None:
@@ -113,11 +169,50 @@ def home(request):
         "search_event": name_org
     }
 
-    return render(request, 'home.html', data)
+    return render(request, 'home.html', my_data)
 
-# def home(request):
-#     user_id = 0
-#     return HttpResponse('Hello world!')
+def accaunt_user(request, pk):
+
+    my_user = CustomUser.objects.filter(pk=pk).first()
+
+    my_events = event.objects.filter(creater=my_user)
+
+    visited_events = EventUser.objects.filter(user = my_user)
+
+    my_req = {
+        'pk':pk,
+        'username': my_user.username,
+        'email': my_user.email,
+        'my_events': my_events,
+        'visited_events': visited_events,
+    }
+
+    return render(request, 'user.html', my_req)
+    
+
+def clicked_ld_accaunt_user(request, pk):
+
+    logger.error(request.POST.get('action'))    
+
+
+    mm_id = int(request.POST.get('event_id'))
+    vis_event = event.objects.filter(pk=mm_id).first()
+    mm_event = EventUser.objects.filter(event=vis_event).first()
+    mm_event.is_clicked = True
+    mm_event.save()
+    
+
+    return redirect(f'/user/{pk}/accaunt/')
+
+
+def logout_accaunt_user(request, pk):
+    logger.error(pk)
+
+    #my_user = CustomUser.objects.filter(pk=pk).first()
+    # logout(request._request)
+    response = redirect("/user/login")
+    response.delete_cookie('session_id')
+    return response
 
 def get_user_factors(user):
     factors = [SEX_INDEX[user.sex], user.age / MAX_AGE, user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: add sex, age

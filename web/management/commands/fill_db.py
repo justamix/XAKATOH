@@ -6,7 +6,7 @@ from minio import Minio
 from ...models import *
 
 def add_users():
-    sex_list = ['female', 'male']
+    sex_list = ['мужчина', 'женщина']
 
     for i in range(1, 10):
         CustomUser.objects.create_user(f"user{i}", f"user{i}@user.com", "1234", random.randint(15, 40), sex_list[i % 2])

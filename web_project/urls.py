@@ -21,16 +21,18 @@ from web import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('api/user/register/', views.api_register_user, name='user-reg'), #POST создание нового пользователя
-    path('api/user/login/', views.api_login_user, name='user-login'), #POST залогиниться
-    path('api/user/<int:pk>/', views.api_info_user, name='user-private'), #PUT личный кабинет
+    # path('api/user/register/', views.api_register_user, name='user-reg'), #POST создание нового пользователя
+    # path('api/user/login/', views.api_login_user, name='user-login'), #POST залогиниться
+    # path('api/user/<int:pk>/', views.api_info_user, name='user-private'), #PUT личный кабинет
     # path('api/user/<int:pk>/create_org/', views.create_user, name='user-whoami'),
 
     path('user/login/', views.login_user, name='user-login'), 
     path('user/login/check/', views.check_login_user, name='user-login'),
-    #path('user/<int:pk>/create_org/', views.check_login_user, name='user-login'),  
-
-
+    path('user/register/', views.register_user, name='user-login'),
+    path('user/register/check/', views.check_register_user, name='user-login'),
+    path('user/<int:pk>/accaunt/', views.accaunt_user, name='user-login'), 
+    path('user/<int:pk>/accaunt/clicked_ld/', views.clicked_ld_accaunt_user, name='user-login'),  
+    path('user/<int:pk>/accaunt/logout/', views.logout_accaunt_user, name='user-login'),  
 
     path('home/', views.home, name='user-whoami'),
     # path('home/<int:pk>/info/', views.info_org_home, name='user-whoami'),
