@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FDF4E3;
+}
+
+header {
+    display: flex;
+    align-items: center; /* Центрирует содержимое по вертикали */
+    justify-content: center; /* Центрирует содержимое по горизонтали, если нужно */
+    height: 100px; /* Высота контейнера */
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #FFC740;
+    padding: 0 20px;
+    z-index: 3;
+}
+
+.logo h1 {
+    font-family: 'Cursive';
+    font-size: 2.5em;
+    color: #A67500;
+    margin: 0;
+}
+
+
+header a {
+    text-decoration: none;
+}
