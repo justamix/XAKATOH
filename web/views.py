@@ -99,9 +99,16 @@ def home(request):
     global error_dict
     error_dict['is_error'] = False
     name_org = request.GET.get('name_org')
+    search_events = search(name_org)
 
-    orgs = event.objects.filter(name__icontains=name_org)
-    return render(request, 'home.html')
+    id = 1
+    req_events = get_reqs(1)
+
+    data = {
+        "req_events": req_events,
+        "search_events": search_events
+    }
+    return render(request, 'home.html', data)
 
 # def home(request):
 #     user_id = 0
