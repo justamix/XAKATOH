@@ -12,4 +12,4 @@ def Home2(request):
     return render(request, 'description.html')
 
 def Home3(request):
-    return render(request, 'reg.html')
+    return render(request, 'login.html')
