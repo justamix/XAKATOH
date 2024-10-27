@@ -13,7 +13,7 @@ from django.conf import settings
 import redis
 import numpy as np
 # from utils import cosine_distance
-from .utils import cosine_distance, filter_str
+from .utils import cosine_distance, filter_str, CAT_INDEX
 
 error_dict = {'is_error':False}
 
@@ -101,10 +101,10 @@ def check_login_user(request):
 def home(request):
     global error_dict
     error_dict['is_error'] = False
-
-    user_id = 1
     name_org = request.GET.get('name_org')
-
+    user_id = 1
+    if name_org is None:
+        name_org = ''
 
     search_events = search(name_org)
     req_events = get_reqs(user_id)
@@ -141,35 +141,35 @@ def get_user_event_factors(user):
 def get_event_factors(event):
     cat = event.category
     one_hot_category = np.ones((5))
-    one_hot_category[cat] = 1
-    factors = np.hstack(one_hot_category, np.array([event.duration, event.capacity]))
+    one_hot_category[CAT_INDEX[cat.name]] = 1
+    factors = np.hstack((one_hot_category, np.array([event.duration_in_minutes, event.capacity])))
     return factors
 
 def get_reqs(user_id):
-    users = models.CustomUser.objects
-    events = models.event.objects
-    user = models.CustomUser.objects
-    userbody = get_user_factors(user_id)
-    event_factors = get_user_event_factors(user)
+    cur_user = CustomUser.objects.get(id=user_id)
+    users = CustomUser.objects.all()
+    events = event.objects.all()
+    userbody = get_user_factors(cur_user)
+    event_factors = get_user_event_factors(cur_user)
     similar_users = list(sorted(users, key=lambda x: cosine_distance(get_user_factors(x), userbody)))[::-1][:min(5, len(users))]
     similar_events = list(sorted(events, key=lambda x: cosine_distance(get_event_factors(x), event_factors)))[::-1][:min(5, len(events))]
     similar_users_events = []
 
     for user in similar_users:
-        top_events = models.EventUser.objects.filter(user=user)
+        top_events = EventUser.objects.filter(user=user)
         similar_users_events.extend([mm.event for mm in top_events])
     return similar_events + similar_users_events
 
 def search(text):
-    words = filter_str(text.split())
-    events = models.event.objects
+    words = filter_str(text).split()
+    events = event.objects.all()
     res = []
-    for event in events:
+    for event_ in events:
         c = 0
-        for word in words.split():
+        for word in words:
             if word in filter_str(event.description):
                 c += 1
             if word in filter_str(event.name):
                 c += 1.5
-        res.append((event, c))
+        res.append((event_, c))
     return list(sorted(res, key=lambda x: -x[1]))
