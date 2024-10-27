@@ -33,6 +33,9 @@ urlpatterns = [
     path('user/<int:pk>/accaunt/', views.accaunt_user, name='user-login'), 
     path('user/<int:pk>/accaunt/clicked_ld/', views.clicked_ld_accaunt_user, name='user-login'),  
     path('user/<int:pk>/accaunt/logout/', views.logout_accaunt_user, name='user-login'),  
+    path('user/<int:pk>/create_event/', views.create_event, name='event_creation'),
+    path('user/<int:pk>/create_event/check/', views.check_create_event, name='event_creation'),
+
 
     path('home/', views.home, name='user-whoami'),
     # path('home/<int:pk>/info/', views.info_org_home, name='user-whoami'),

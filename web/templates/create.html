@@ -12,7 +12,8 @@
 
 <div class="event-form-container">
     <h2>Создание нового мероприятия</h2>
-    <form action="/submit-event" method="POST" enctype="multipart/form-data">
+    <form action="check/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
         <label for="event-image">Загрузить изображение:</label>
         <input type="file" id="event-image" name="event-image" accept="image/*">
 
@@ -21,6 +22,9 @@
 
         <label for="event-category">Категория:</label>
         <input type="text" id="event-category" name="event-category" placeholder="Введите категорию" required>
+
+        <label for="event-category">Дата:</label>
+        <input type="text" id="event-category" name="event-date" placeholder="Введите дату" required>
 
         <label for="event-address">Адрес:</label>
         <input type="text" id="event-address" name="event-address" placeholder="Введите адрес" required>

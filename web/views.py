@@ -12,6 +12,9 @@ import uuid
 from django.conf import settings
 import redis
 import random
+from web_project.miniof import *
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 
 error_login = {'is_error':False}
@@ -185,11 +188,11 @@ def clicked_ld_accaunt_user(request, pk):
 
     mm_id = int(request.POST.get('event_id'))
     vis_event = event.objects.filter(pk=mm_id).first()
-    mm_event = EventUser.objects.filter(event=vis_event).first()
+    user = CustomUser.objects.filter(pk=pk).first()
+    mm_event = EventUser.objects.filter(event=vis_event, user=user).first()
     mm_event.is_clicked = True
     mm_event.save()
     
-
     return redirect(f'/user/{pk}/accaunt/')
 
 
@@ -201,3 +204,48 @@ def logout_accaunt_user(request, pk):
     response = redirect("/user/login")
     response.delete_cookie('session_id')
     return response
+
+
+def create_event(request, pk):
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+    except:
+        return redirect('/user/login')
+
+    return render(request, 'create.html')    
+
+
+    
+
+
+def check_create_event(request, pk):
+    if request.method == 'POST':
+        name = request.POST.get('event-name')
+
+        category =  request.POST.get('event-category')
+        my_category = Category.objects.filter(name=category).first()
+
+        address = request.POST.get('event-address')
+        description = request.POST.get('event-description')
+        count = request.POST.get('event-count')
+        date = parse_datetime(str(request.POST.get('event-date')))
+
+        event_ = event.objects.create(date=date, address=address,
+                                      name=name, category=my_category, description=description, capacity=count,
+                                      creater=CustomUser.objects.get(id=pk), url='')
+        if request.FILES.get('event-image'):
+            delete_pic(event_)
+            new_pic = request.FILES.get('event-image')
+            add_pic(event_, new_pic)
+            event_.save()
+        # event_.address = address
+        # event_.name = name
+        # event_.category = category
+        # # event_.date = datetime.timezone.
+        # event_.description = description
+        # event_.capacity = count
+        # event_.creater = CustomUser.objects.get(id=pk)
+
+        return redirect(f'/user/{pk}/accaunt')
+    return render(request, 'create.html')
