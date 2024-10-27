@@ -13,9 +13,9 @@ from django.conf import settings
 import redis
 import numpy as np
 # from utils import cosine_distance
-from .utils import cosine_distance, filter_str, CAT_INDEX
+from .utils import cosine_distance, filter_str, CAT_INDEX, MAX_DURATION, MAX_CAPACITY, MAX_AGE, SEX_INDEX
 
-error_dict = {'is_error':False}
+error_dict = {'is_error': False}
 
 logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
@@ -107,16 +107,6 @@ def home(request):
         name_org = ''
     search_events = search(name_org)
     req_events = get_reqs(user_id)
-    
-    # left_reqs = []
-    # left_search = []
-
-    # for event in search_events:
-    #     left_search.append(event.capacity - len(EventUser.objects.filter(event=event)))
-    
-    # for event in req_events:
-    #     left_reqs.append(event.capacity - len(EventUser.objects.filter(event=event)))
-
     data = {
         "req_events": req_events,
         "search_events": search_events,
@@ -130,22 +120,21 @@ def home(request):
 #     return HttpResponse('Hello world!')
 
 def get_user_factors(user):
-    factors = [user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: add sex, age
+    factors = [SEX_INDEX[user.sex], user.age / MAX_AGE, user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: add sex, age
     userbody = np.array(factors)
     return userbody
 
 def get_user_event_factors(user):
-    # factors = [user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: check order
-    factors = [user.nature, user.sport, user.board_games, user.arts, user.food]
+    factors = [user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: check order
+    # factors = [user.nature, user.sport, user.board_games, user.arts, user.food]
     return np.array(factors)
 
 def get_event_factors(event):
     cat = event.category
     one_hot_category = np.zeros((5))
     one_hot_category[CAT_INDEX[cat.name]] = 1
-    # factors = np.hstack((one_hot_category, np.array([event.duration_in_minutes, event.capacity])))
-    # return factors
-    return one_hot_category
+    factors = np.hstack((one_hot_category, np.array([event.duration_in_minutes / MAX_DURATION, event.capacity / MAX_CAPACITY])))
+    return factors
 
 def get_reqs(user_id):
     cur_user = CustomUser.objects.get(id=user_id)
@@ -159,8 +148,8 @@ def get_reqs(user_id):
     for user in similar_users:
         top_events = EventUser.objects.filter(user=user)
         similar_users_events.extend([mm.event for mm in top_events if mm.event not in similar_users_events])
-    # return similar_events + [event_ for event_ in similar_users_events if event_ not in similar_events]
-    return similar_events
+    return similar_events + [event_ for event_ in similar_users_events if event_ not in similar_events]
+    # return similar_events
 
 def search(text):
     words = filter_str(text).split()
@@ -175,3 +164,19 @@ def search(text):
                 c += 1.5
         res.append((event_, c))
     return list(i[0] for i in sorted(res, key=lambda x: -x[1]))
+
+def correct_userbody(user, event, r):
+    event_factors = get_event_factors(event)
+    user_event_factors = get_user_event_factors(user)
+    new_factors = user_event_factors + r * event_factors
+    update_factors(user, new_factors)
+
+def update_factors(user, factors):
+    user.nature = factors[0]
+    user.sport = factors[1]
+    user.board_games = factors[2]
+    user.arts = factors[3]
+    user.food = factors[4]
+    user.duration = factors[5]
+    user.capacity = factors[6]
+    user.save()

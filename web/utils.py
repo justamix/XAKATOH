@@ -10,7 +10,14 @@ CAT_INDEX = {
     "Питание": 4
 }
 
+SEX_INDEX = {
+    'male': 0,
+    'female': 1
+}
+
 MAX_DURATION = 240
+MAX_CAPACITY = 100
+MAX_AGE = 100
 
 
 
