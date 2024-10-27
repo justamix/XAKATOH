@@ -53,7 +53,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'web_project.urls'
-
+ 
 AUTH_USER_MODEL = 'web.CustomUser' 
 
 TEMPLATES = [

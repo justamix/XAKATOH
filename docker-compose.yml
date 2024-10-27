@@ -13,6 +13,15 @@ services:
       - pgdb
       - minio
 
+  migration:
+    build: .
+    container_name: migration
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py fill_db"
+    volumes:
+      - ./:/usr/src/web
+    depends_on:
+      - pgdb
+
   pgdb:
     # Использование готового образа postgres
     image: postgres

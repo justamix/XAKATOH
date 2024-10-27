@@ -27,7 +27,9 @@ urlpatterns = [
     # path('api/user/<int:pk>/create_org/', views.create_user, name='user-whoami'),
 
     path('user/login/', views.login_user, name='user-login'), 
-    path('user/login/check/', views.check_login_user, name='user-login'), 
+    path('user/login/check/', views.check_login_user, name='user-login'),
+    #path('user/<int:pk>/create_org/', views.check_login_user, name='user-login'),  
+
 
 
     path('home/', views.home, name='user-whoami'),
