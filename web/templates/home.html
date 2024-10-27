@@ -25,7 +25,7 @@
 
         <div class="carousel-track">
             <div class="carousel-card">
-                {% for card in event %}
+                {% for card in req_events %}
                     {% include 'home_carusel_card.html' with element=card %}
                 {% endfor %}
             </div>
@@ -39,7 +39,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/home_card.css' %}"/>
 <div class="product-container">
     <div class="product-card">
-        {% for card in event %}
+        {% for card in search_events %}
             {% include 'home_card.html' with element=card %}
         {% endfor %}
     </div>
