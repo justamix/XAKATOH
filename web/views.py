@@ -63,12 +63,13 @@ def api_login_user(request):
         else:
             return HttpResponse("{'status': 'error', 'error': 'login failed'}")
 
-@api_view(["GET"])
 def api_info_user(request, pk):
-    user = CustomUser.objects.filter(pk=pk)
+    user = CustomUser.objects.filter(pk=pk).first()  # Используйте first(), чтобы получить объект или None
+    if not user:
+        print(f"Пользователь с ID {pk} не найден.")  # Отладка
+        return redirect('home')  # Или вернуть ошибку 404
     serializer = UserRegSerializer(user)
-    return Response(serializer.data)
-
+    return render(request, 'user.html', serializer)
 
 def login_user(request):
     global error_dict
@@ -108,19 +109,11 @@ def home(request):
 
     search_events = search(name_org)
     req_events = get_reqs(user_id)
-    
-    # left_reqs = []
-    # left_search = []
-
-    # for event in search_events:
-    #     left_search.append(event.capacity - len(EventUser.objects.filter(event=event)))
-    
-    # for event in req_events:
-    #     left_reqs.append(event.capacity - len(EventUser.objects.filter(event=event)))
-
+    user_id = 1
     data = {
         "req_events": req_events,
-        "search_events": search_events
+        "search_events": search_events,
+        "user" : user_id
     }
 
     return render(request, 'home.html', data)

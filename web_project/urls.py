@@ -23,7 +23,8 @@ urlpatterns = [
 
     path('api/user/register/', views.api_register_user, name='user-reg'), #POST создание нового пользователя
     path('api/user/login/', views.api_login_user, name='user-login'), #POST залогиниться
-    path('api/user/<int:pk>/', views.api_info_user, name='user-private'), #PUT личный кабинет
+    
+    path('user/<int:pk>/', views.api_info_user, name='user-private'),
     # path('api/user/<int:pk>/create_org/', views.create_user, name='user-whoami'),
 
     path('user/login/', views.login_user, name='user-login'), 
