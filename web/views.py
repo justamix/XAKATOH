@@ -98,8 +98,8 @@ def check_login_user(request):
 def home(request):
     global error_dict
     error_dict['is_error'] = False
-
     name_org = request.GET.get('name_org')
+
     orgs = event.objects.filter(name__icontains=name_org)
     return render(request, 'home.html')
 
@@ -147,5 +147,7 @@ def search(text):
         for word in words.split():
             if word in filter_str(event.description):
                 c += 1
+            if word in filter_str(event.name):
+                c += 1.5
         res.append((event, c))
     return list(sorted(res, key=lambda x: -x[1]))
