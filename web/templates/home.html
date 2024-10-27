@@ -7,12 +7,14 @@
 
 {% block search %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
-<div class="search-container">
-    <form action="" method="get">
-        <input type="text" placeholder="Введите текст" class="search-input">
-        <button class="search-button">Найти</button>
-        <button class="prof-button">Профиль</button>
+<div class="search-container" style="display: flex; align-items: center;">
+    <form action="" method="get" style="display: flex; align-items: center; margin-right: 10px;">
+        <input type="text" name="name_org" placeholder="Введите текст" class="search-input">
+        <button type="submit" class="search-button">Найти</button>
     </form>
+    <a href="{% url 'user-private' pk=user %}" class="cart-button">
+        <button type="button" class="prof-button">Профиль</button>
+    </a>
 </div>
 {% endblock %}
 
