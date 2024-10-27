@@ -157,8 +157,8 @@ def get_reqs(user_id):
 
     for user in similar_users:
         top_events = EventUser.objects.filter(user=user)
-        similar_users_events.extend([mm.event for mm in top_events])
-    return similar_events + similar_users_events
+        similar_users_events.extend([mm.event for mm in top_events if mm.event not in similar_users_events])
+    return similar_events + [event_ for event_ in similar_users_events if event_ not in similar_events]
 
 def search(text):
     words = filter_str(text).split()
@@ -172,4 +172,4 @@ def search(text):
             if word in filter_str(event.name):
                 c += 1.5
         res.append((event_, c))
-    return list(sorted(res, key=lambda x: -x[1]))
+    return list(i[0] for i in sorted(res, key=lambda x: -x[1]))

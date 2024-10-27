@@ -24,11 +24,11 @@
     <div class="carousel">
 
         <div class="carousel-track">
-            <div class="carousel-card">
-                {% for card in req_events %}
-                    {% include 'home_carusel_card.html' with element=card %}
-                {% endfor %}
-            </div>
+                
+            {% for card in req_events %}
+                {% include 'home_carusel_card.html' with element=card %}
+            {% endfor %}
+
         </div>
 
     </div>
@@ -38,11 +38,11 @@
 {% block card %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/home_card.css' %}"/>
 <div class="product-container">
-    <div class="product-card">
         {% for card in search_events %}
+        <div class="product-card">
             {% include 'home_card.html' with element=card %}
+        </div>
         {% endfor %}
-    </div>
 </div>
 
 {% endblock %}

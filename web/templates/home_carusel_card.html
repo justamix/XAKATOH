@@ -1,13 +1,13 @@
 {% load static %}
 
-
 <link rel="stylesheet" type="text/css" href="{% static 'css/home_card.css' %}"/>
 
 
+<div class="carousel-card">
 
-
-<img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-<h3>{{ element.name }}</h3>
-<p>{{ element.capacity }}</p>
-{% csrf_token %}
-<button class="join-button">Участвовать</button>
+    <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
+    <h3>{{ element.name }}</h3>
+    <p>{{ element.capacity }}</p>
+    {% csrf_token %}
+    <button class="join-button">Участвовать</button>
+</div>
