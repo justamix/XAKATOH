@@ -103,7 +103,6 @@ def home(request):
     orgs = event.objects.filter(name__icontains=name_org)
     return render(request, 'home.html')
 
-
 # def home(request):
 #     user_id = 0
 #     return HttpResponse('Hello world!')
@@ -149,4 +148,4 @@ def search(text):
             if word in filter_str(event.description):
                 c += 1
         res.append((event, c))
-    return list(sorted(res, key=lambda x: x[1]))    
+    return list(sorted(res, key=lambda x: -x[1]))
