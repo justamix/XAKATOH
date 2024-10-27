@@ -1,0 +1,12 @@
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/home_card.css' %}"/>
+
+
+
+
+<img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
+<h3>{{ element.name }}</h3>
+<p>{{ element.count }}</p>
+<button class="join-button">Участвовать</button>
