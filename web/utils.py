@@ -10,6 +10,9 @@ CAT_INDEX = {
     "Питание": 4
 }
 
+MAX_DURATION = 240
+
+
 
 def cosine_distance(x1, x2):
     return np.dot(x1, x2) / (np.linalg.norm(x1) * np.linalg.norm(x2))

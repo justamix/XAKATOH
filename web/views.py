@@ -101,11 +101,10 @@ def check_login_user(request):
 def home(request):
     global error_dict
     error_dict['is_error'] = False
-    name_org = request.GET.get('name_org')
+    name_org = request.GET.get('search_event')
     user_id = 1
     if name_org is None:
         name_org = ''
-
     search_events = search(name_org)
     req_events = get_reqs(user_id)
     
@@ -120,7 +119,8 @@ def home(request):
 
     data = {
         "req_events": req_events,
-        "search_events": search_events
+        "search_events": search_events,
+        "search_event": name_org
     }
 
     return render(request, 'home.html', data)
@@ -130,20 +130,22 @@ def home(request):
 #     return HttpResponse('Hello world!')
 
 def get_user_factors(user):
-    factors = [user.board_games, user.arts, user.sport, user.nature, user.food, user.duration, user.capacity] #TODO: add sex, age
+    factors = [user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: add sex, age
     userbody = np.array(factors)
     return userbody
 
 def get_user_event_factors(user):
-    factors = [user.board_games, user.arts, user.sport, user.nature, user.food, user.duration, user.capacity] #TODO: check order
+    # factors = [user.nature, user.sport, user.board_games, user.arts, user.food, user.duration, user.capacity] #TODO: check order
+    factors = [user.nature, user.sport, user.board_games, user.arts, user.food]
     return np.array(factors)
 
 def get_event_factors(event):
     cat = event.category
-    one_hot_category = np.ones((5))
+    one_hot_category = np.zeros((5))
     one_hot_category[CAT_INDEX[cat.name]] = 1
-    factors = np.hstack((one_hot_category, np.array([event.duration_in_minutes, event.capacity])))
-    return factors
+    # factors = np.hstack((one_hot_category, np.array([event.duration_in_minutes, event.capacity])))
+    # return factors
+    return one_hot_category
 
 def get_reqs(user_id):
     cur_user = CustomUser.objects.get(id=user_id)
@@ -154,11 +156,11 @@ def get_reqs(user_id):
     similar_users = list(sorted(users, key=lambda x: cosine_distance(get_user_factors(x), userbody)))[::-1][:min(5, len(users))]
     similar_events = list(sorted(events, key=lambda x: cosine_distance(get_event_factors(x), event_factors)))[::-1][:min(5, len(events))]
     similar_users_events = []
-
     for user in similar_users:
         top_events = EventUser.objects.filter(user=user)
         similar_users_events.extend([mm.event for mm in top_events if mm.event not in similar_users_events])
-    return similar_events + [event_ for event_ in similar_users_events if event_ not in similar_events]
+    # return similar_events + [event_ for event_ in similar_users_events if event_ not in similar_events]
+    return similar_events
 
 def search(text):
     words = filter_str(text).split()
@@ -167,9 +169,9 @@ def search(text):
     for event_ in events:
         c = 0
         for word in words:
-            if word in filter_str(event.description):
+            if word[:-2] in filter_str(event_.description):
                 c += 1
-            if word in filter_str(event.name):
+            if word[:-2] in filter_str(event_.name):
                 c += 1.5
         res.append((event_, c))
     return list(i[0] for i in sorted(res, key=lambda x: -x[1]))
