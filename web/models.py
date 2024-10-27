@@ -64,6 +64,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f'{self.name}'
+
     class Meta:
         managed =True
         db_table = 'category'
@@ -95,6 +98,7 @@ class event(models.Model):
 class EventUser(models.Model):
     event = models.ForeignKey('event', models.DO_NOTHING)
     user = models.ForeignKey('CustomUser', models.DO_NOTHING)
+    is_clicked = models.BooleanField(default=0)
     class Meta:
         managed = True
         db_table = 'event_user'

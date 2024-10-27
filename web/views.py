@@ -148,10 +148,56 @@ def home(request):
         username = username.decode('utf-8')
     except:
         return redirect('/user/login')
+
+    logger.error(username)
+    user = CustomUser.objects.filter(username=username).first()
     my_data = {
-        'username': username
+        'username': username,
+        'pk':user.pk,
     }
 
     return render(request, 'home.html', my_data)
 
 
+def accaunt_user(request, pk):
+
+    my_user = CustomUser.objects.filter(pk=pk).first()
+
+    my_events = event.objects.filter(creater=my_user)
+
+    visited_events = EventUser.objects.filter(user = my_user)
+
+    my_req = {
+        'pk':pk,
+        'username': my_user.username,
+        'email': my_user.email,
+        'my_events': my_events,
+        'visited_events': visited_events,
+    }
+
+    return render(request, 'user.html', my_req)
+    
+
+def clicked_ld_accaunt_user(request, pk):
+
+    logger.error(request.POST.get('action'))    
+
+
+    mm_id = int(request.POST.get('event_id'))
+    vis_event = event.objects.filter(pk=mm_id).first()
+    mm_event = EventUser.objects.filter(event=vis_event).first()
+    mm_event.is_clicked = True
+    mm_event.save()
+    
+
+    return redirect(f'/user/{pk}/accaunt/')
+
+
+def logout_accaunt_user(request, pk):
+    logger.error(pk)
+
+    #my_user = CustomUser.objects.filter(pk=pk).first()
+    # logout(request._request)
+    response = redirect("/user/login")
+    response.delete_cookie('session_id')
+    return response

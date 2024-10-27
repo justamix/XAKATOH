@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Личный кабинет
+{% endblock %}
+
+{% block search %}
+<link rel="stylesheet" href="{% static 'user.css' %}">
+
+
+    <div class="info-container">
+        <p><strong>Логин:</strong> {{ username }}</p>
+        <p><strong>Почта:</strong> {{ email }}</p>
+
+        <button class="home-button"><a href="http://127.0.0.1:8000/home/" class="home-button">На главную</a></button>
+
+        <button class="home-button"><a href="http://127.0.0.1:8000/user/{{ pk }}/create/" class="home-button">Создание</a></button>
+
+        <form method="post" action="logout/">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Выход</button>
+        </form>
+        
+    </div>
+
+
+    <div class="container">
+        <div class="list left">
+            <h2> Ваши мероприятия </h2>
+            {% for my_event in my_events %}
+            <div class="event-card">
+                <div class="event-details">
+                    <h3 class="event-name">{{ my_event.name }}</h3>
+                    <p><strong>Категория:</strong> {{ my_event.category }}</p>
+                    <p><strong>Адрес:</strong> {{ my_event.address }}</p>
+                </div>
+            </div>
+            {% empty %}
+                <p>У вас пока нет мероприятий.</p>
+            {% endfor %}
+        </div>
+
+
+        <div class="list right">
+            <h2> Недавно посещенные</h2>
+            {% for visited_event in visited_events %}
+            <div class="event-card">
+                <div class="event-details">
+                    <h3 class="event-name">{{ visited_event.event.name }}</h3>
+                    <p><strong>Категория:</strong> {{ visited_event.event.category }}</p>
+                    <p><strong>Адрес:</strong> {{ visited_event.event.address }}</p>
+                    <form method="post" action="clicked_ld/">
+                        {% csrf_token %}
+                        {% if visited_event.is_clicked == False %} 
+                        <button type="submit" name="action" value="like" class="like-button">👍 Like</button>
+                        <button type="submit" name="action" value="dislike" class="dislike-button">👎 Dislike</button>
+                        <input type="hidden" name="event_id" value="{{ visited_event.event.pk }}"/>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+                <p>У вас пока нет мероприятий.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
