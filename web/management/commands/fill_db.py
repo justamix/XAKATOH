@@ -179,14 +179,22 @@ def add_event():
     print('Мероприятия созданы')
 
 
+def add_mm_event_user():
+    for event_ in range(1, 11):
+        for user in range(1, 11):
+            EventUser.objects.create(
+                event = event.objects.filter(pk = event_).first(),
+                user = CustomUser.objects.filter(pk = user).first()
+            )
+    print('М-М создано')
 
 
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         add_users(),
         add_category(),
-        add_event()
-
+        add_event(),
+        add_mm_event_user()
 
 # insers_category = [
 #     "INSERT INTO category (name) VALUES ('Спорт')",

@@ -57,8 +57,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         managed = True
         db_table = 'custom_user'
-# from django.db import models
-# from django.contrib.auth.models import User
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
 
 
 class Category(models.Model):
@@ -69,9 +69,8 @@ class Category(models.Model):
     class Meta:
         managed =True
         db_table = 'category'
-#     class Meta:
-#         managed =True
-#         db_table = 'category'
+        verbose_name = 'категория'
+        verbose_name_plural = 'категории'
 
 class event(models.Model):
     name = models.TextField()
@@ -91,6 +90,8 @@ class event(models.Model):
     class Meta:
         managed = True 
         db_table = 'event'
+        verbose_name = 'мероприятие'
+        verbose_name_plural = 'мероприятия'
 
 
 class EventUser(models.Model):
@@ -100,3 +101,5 @@ class EventUser(models.Model):
         managed = True
         db_table = 'event_user'
         unique_together = (('event', 'user'),)
+        verbose_name = 'посещение'
+        verbose_name_plural = 'посещения'
