@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Личный кабинет
+{% endblock %}
+
+
+{% block search %}
+
+<h1>Профиль пользователя</h1>
+<p>Имя: {{ user.username }}</p>
+<p>Почта: {{ user.email }}</p>
+
+<h2>Ваши мероприятия</h2>
+
+{% endblock %}
+
+
+
+{% block card %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/user.css' %}"/>
+<div>
+    {% for event in events %}
+        <div class="event-card">
+            <h3>{{ event.name }}</h3>
+            <p>Категория:{{ event.caregory }}</p>
+            <p>Адрес: {{ event.adress }}</p>
+                
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                {{ rating_form.rating|add_class:"rating-dropdown" }}
+                <button type="submit">Оценить</button>
+            </form>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+

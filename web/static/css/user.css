@@ -1,0 +1,12 @@
+/* static/css/user_profile.css */
+
+.event-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.rating-dropdown {
+    margin-right: 10px;
+}
