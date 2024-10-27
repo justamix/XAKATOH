@@ -6,17 +6,18 @@
 {% endblock %}
 
 {% block search %}
-<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
 <div class="search-container">
     <form action="" method="get">
-        <input type="text" placeholder="Введите текст" class="search-input" name="name_org">
+        <input type="text" placeholder="Введите текст" class="search-input">
         <button class="search-button">Найти</button>
+        <button class="prof-button">Профиль</button>
     </form>
 </div>
 {% endblock %}
 
 {% block offers %}
-<link rel="stylesheet" type="text/css" href="{% static 'home.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}"/>
 <div class="carousel-container">
     <!-- <h2>По Вашим интересам  </h2> -->
     <p>Предложения для Вас </p>
@@ -24,50 +25,10 @@
 
         <div class="carousel-track">
             <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
+                {% for card in event %}
+                    {% include 'home_carusel_card.html' with element=card %}
+                {% endfor %}
             </div>
-            
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            <div class="carousel-card">
-                <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия">
-                <h3>Название мероприятия</h3>
-                <p>Осталось мест: 10</p>
-                <button class="join-button">Участвовать</button>
-            </div>
-            
-            <!-- Добавьте больше карточек по необходимости -->
         </div>
 
     </div>
@@ -75,33 +36,13 @@
 {% endblock %}
 
 {% block card %}
-<link rel="stylesheet" type="text/css" href="{% static 'home_card.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/home_card.css' %}"/>
 <div class="product-container">
     <div class="product-card">
-        <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия" class="product-image">
-        <div class="product-details">
-            <h3>Название мероприятия</h3>
-            <p class="remaining-seats">Осталось мест: 10</p>
-            <p class="remaining-seats">Категория: Секс</p>
-            <p class="remaining-seats">Адрес: Порностудия</p>
-            <div class="button-container_card">
-                <button class="join-button_card">Участвовать</button>
-            </div>
-        </div>
+        {% for card in event %}
+            {% include 'home_card.html' with element=card %}
+        {% endfor %}
     </div>
-    <div class="product-card">
-        <img src="http://127.0.0.1:9000/hack/img1.jpg" alt="Изображение мероприятия" class="product-image">
-        <div class="product-details">
-            <h3>Название мероприятия</h3>
-            <p class="remaining-seats">Осталось мест: 15</p>
-            <p class="remaining-seats">Категория: Секс</p>
-            <p class="remaining-seats">Адрес: Порностудия</p>
-            <div class="button-container_card">
-                <button class="join-button_card">Участвовать</button>
-            </div>
-        </div>
-    </div>
-    <!-- Добавьте больше карточек по необходимости -->
 </div>
 
 {% endblock %}

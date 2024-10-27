@@ -52,14 +52,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         managed = True
         db_table = 'custom_user'
+# from django.db import models
+# from django.contrib.auth.models import User
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
+# class Category(models.Model):
+#     name = models.CharField()
 
     class Meta:
         managed = False
         db_table = 'category'
+#     class Meta:
+#         managed =True
+#         db_table = 'category'
 
 class event(models.Model):
     name = models.CharField(max_length=100)
@@ -74,6 +81,7 @@ class event(models.Model):
     capacity = models.IntegerField()
     category = models.ForeignKey('category', models.DO_NOTHING)
 
+
     class Meta:
         managed = False 
         db_table = 'event'
@@ -86,3 +94,7 @@ class EventUser(models.Model):
         managed = False
         db_table = 'event_user'
         unique_together = (('event', 'user'),)
+#     class Meta:
+#         managed = True 
+#         db_table = 'event'
+
