@@ -14,7 +14,8 @@ import redis
 import random
 
 
-error_dict = {'is_error':False}
+error_login = {'is_error':False}
+error_register = {'is_error':False}
 
 logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
@@ -70,15 +71,20 @@ def api_info_user(request, pk):
 
 
 def login_user(request):
-    global error_dict
-    return render(request, 'login.html', error_dict)
+    global error_login
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
+    except:
+        return render(request, 'login.html', error_login)
 
 def check_login_user(request):
-    global error_dict
+    global error_login
     try:
-        if request.COOKIES("session_id") is not None:
-            error_dict['is_error'] = True
-            return redirect("user", "login")
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
     except:
         username = str(request.POST.get("login")) 
         password = request.POST.get("pass")
@@ -94,17 +100,58 @@ def check_login_user(request):
 
             return response
         else:
-            error_dict['is_error'] = True
+            error_login['is_error'] = True
             return redirect("/user/login")
         
+
+def register_user(request, is_error=False):
+    global error_register
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+        return redirect("/home")
+    except:
+        return render(request, 'reg.html', error_register)
+
+def check_register_user(request):
+    global error_register
+
+    username = request.POST.get('username')
+    email = request.POST.get('email')
+    sex = request.POST.get('gender')
+    age = int(request.POST.get('age'))
+    password = request.POST.get('password')
+
+    logger.error(f"{username}, {email}, {sex}, {age}, {password}")
+
+    try:
+        new_user = CustomUser.objects.create_user(
+            username = username,
+            email = email,
+            sex = sex,
+            age = age,
+            password = password
+        )
+
+        return redirect('/user/login')
+
+    except:
+        error_register['is_error'] = True
+        return redirect('/user/register')
+
+        
 def home(request):
-    global error_dict
-    error_dict['is_error'] = False
+    global error_login
+    error_login['is_error'] = False
+    try:
+        username = session_storage.get(request.COOKIES["session_id"])
+        username = username.decode('utf-8')
+    except:
+        return redirect('/user/login')
+    my_data = {
+        'username': username
+    }
 
-    # name_org = request.GET.get('name_org')
-    # orgs = event.objects.filter(name__icontains=name_org)
-
-
-    return render(request, 'home.html')
+    return render(request, 'home.html', my_data)
 
 
