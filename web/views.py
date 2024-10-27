@@ -11,12 +11,17 @@ import logging
 import uuid
 from django.conf import settings
 import redis
+import random
+
 
 error_dict = {'is_error':False}
 
 logger = logging.getLogger(__name__)
 session_storage = redis.StrictRedis(host=settings.REDIS_HOST, port=settings.REDIS_PORT)
 
+# add_users()
+
+   
 @api_view(["POST"])
 def api_register_user(request):
     logger.error(request.user)
@@ -101,3 +106,5 @@ def home(request):
 
 
     return render(request, 'home.html')
+
+
